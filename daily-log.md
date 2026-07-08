@@ -12,7 +12,7 @@ Done:
 - [✅] Repo created
 - [✅] Python environment ready
 - [✅] Probability notes started
-- [] Coin toss simulation completed
+- [✅] Coin toss simulation completed
 
 Learned:
 - 
