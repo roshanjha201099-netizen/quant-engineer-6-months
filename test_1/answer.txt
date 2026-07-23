@@ -1,0 +1,68 @@
+q1) A biometric AI classification system is deployed to detect a specific individual in a crowd.
+The base rate of encountering this individual is 10−6
+. The system’s sensitivity is 0.99, and
+its specificity is 0.999. If the system flags a person, what is the exact probability that it is
+a false positive?
+
+
+answer1:-base rate =1e-6
+sensitivity=0.99 so what?actually forgot 
+so answer i cannot do 
+
+q2)In a high-frequency trading simulation, an asset’s price changes every second by +1, 0,
+or -1 unit with equal probability. You hold a position for exactly two seconds. Derive
+the probability mass function (PMF) of your net profit, assuming the price changes are
+independent random variables.
+
+answer:-bhai ye PMF bass itna yaad hai ki kisi excat value ka hota hai
+P(X=absolute val) ya discrete value ka hota hai and since it is chnaging every sec so answer will be 0
+
+q3)A manufacturing line produces components where each component has an independent
+probability p of being defective. Prove mathematically that the expected number of components inspected until the first defect is found is 1/p.
+
+
+answer:-so this is the proof asking 
+ E(x)=1/p till got first defect where p being the defect piece
+i dont know the proof
+
+ q4)A medical test for a rare genetic marker has a false positive rate of α and a false negative
+rate of β. The population base rate is γ. Formulate the exact expression for the posterior
+probability of a patient having the marker given a negative test result, and simplify it
+
+answer:-P(marker|+)=p(marker and +ve)/p(+ve)
+q5) A sports analytics model evaluates a basketball player taking N independent free throws.
+The probability of making the i-th free throw is pi
+. Derive the exact expression for the
+variance of the total number of successful free throws using the properties of linearity of
+expectation.
+sol:-linearity of expecation pata hi nahi hai 
+
+q6). A commuter arrives at a station where trains depart on a schedule, but due to delays,
+the waiting time is a continuous random variable uniformly distributed between 0 and T
+minutes. Formulate the probability density function (PDF), and determine the probability
+of waiting strictly more than 3T /4 minutes.
+
+soln:-P(0<=x<=T)=3T/4
+
+
+q7)Consider an algorithm designed to generate a uniform random integer between 1 and 7
+inclusive. It tosses a fair coin 3 times to generate a binary number from 0 to 7. If the
+result is 0, it recursively restarts the process. Prove that this algorithm terminates with
+probability 1 and that the final output strictly follows a uniform distribution.
+
+sol:-no idea how it will be 
+
+q8)In a casino game, you roll a fair six-sided die. You may either stop and receive the face
+value in units, or pay 1 unit to roll again. You are permitted a maximum of three rolls
+(two rerolls). Determine the optimal stopping strategy and calculate your expected net
+payoff.
+solution:-aah blueshit 😭 
+
+q9)An urn initially contains R red marbles and B blue marbles. You repeatedly draw two
+marbles at random. If they are the same color, you discard both and place a new blue
+marble into the urn. If they are different colors, you discard the blue one and return the
+red one to the urn. Prove a structural invariant regarding the parity of the red marbles
+and determine the color of the final remaining marble if R is odd
+
+soln:-bull shit 
+
