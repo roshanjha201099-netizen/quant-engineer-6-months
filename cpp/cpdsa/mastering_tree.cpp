@@ -71,6 +71,7 @@ void matching_tree() {
     dfs(1, 0);
     cout << dp[1][0] << "\n";
 }
+
 void diameter(){
     int n;
     int m;
@@ -328,9 +329,243 @@ void company_query_two(){
         }
         cout<<up[a][0]<<"\n";
     }
+}
+
+
+void distance_queries() {
+    int n, q;
+    cin >> n >> q;
+
+    vector<vector<int>> tree(n + 1);
+
+    for (int i = 1; i < n; i++) {
+        int u, v;
+        cin >> u >> v;
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+
+    vector<int> depth(n + 1);
+    vector<int> par(n + 1);
+
+    function<void(int, int)> dfs = [&](int u, int p) {
+        par[u] = p;
+
+        for (int v : tree[u]) {
+            if (v == p) continue;
+
+            depth[v] = depth[u] + 1;
+            dfs(v, u);
+        }
+    };
+
+    dfs(1, 0);
+
+    const int LOG = 22;
+    vector<vector<int>> up(n + 1, vector<int>(LOG, 0));
+
+    for (int i = 1; i <= n; i++) {
+        up[i][0] = par[i];
+    }
+
+    for (int j = 1; j < LOG; j++) {
+        for (int i = 1; i <= n; i++) {
+            up[i][j] = up[up[i][j - 1]][j - 1];
+        }
+    }
+
+    while (q--) {
+        int u, v;
+        cin >> u >> v;
+
+        int original_u = u;
+        int original_v = v;
+
+        if (depth[u] < depth[v]) {
+            swap(u, v);
+        }
+
+        int diff = depth[u] - depth[v];
+
+        for (int i = 0; i < LOG; i++) {
+            if (diff & (1 << i)) {
+                u = up[u][i];
+            }
+        }
+
+        int lca;
+
+        if (u == v) {
+            lca = u;
+        } else {
+            for (int j = LOG - 1; j >= 0; j--) {
+                if (up[u][j] != up[v][j]) {
+                    u = up[u][j];
+                    v = up[v][j];
+                }
+            }
+
+            lca = up[u][0];
+        }
+
+        int ans = depth[original_u] + depth[original_v]
+                - 2 * depth[lca];
+
+        cout << ans << '\n';
+    }
+}
+
+void counting_path(){
+    int n,m;
+    cin>>n>>m;
+    vector<vector<int>>tree(n+1);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+    vector<int>par(n+1),depth(n+1);
+    function<void(int,int)>dfs=[&](int u,int p){
+        par[u]=p;
+        for(int v:tree[u]){
+            if(v==p)continue;
+            depth[v]=depth[u]+1;
+            dfs(v,u);
+        }
+    };
+    dfs(1,0);
+    const int LOG=22;
+    vector<vector<int>>up(n+1,vector<int>(22));
+    for(int i=1;i<=n;i++){
+        up[i][0]=par[i];
+    }
+    for(int j=1;j<LOG;j++){
+        for(int i=1;i<=n;i++){
+            up[i][j]=up[up[i][j-1]][j-1];
+        }
+    }
+    vector<int>cnt(n+1,0);
+    while(m--){
+        int a,b;
+        cin>>a>>b;
+        int og_a=a;
+        int og_b=b;
+        if(depth[a]<depth[b]){
+            swap(a,b);
+        }
+        int diff=depth[a]-depth[b];
+        for(int i=0;i<LOG;i++){
+            if(diff & (1<<i)){
+                a=up[a][i];
+            }
+        }
+        int lca;
+        if(a==b){
+            lca=a;
+        }else{
+            for(int i=LOG-1;i>=0;i--){
+                if(up[a][i]!=up[b][i]){
+                    a=up[a][i];
+                    b=up[b][i];
+                }
+            }
+            lca=up[a][0];
+        }
+        cnt[og_a]++;
+        cnt[og_b]++;
+        cnt[lca]--;
+        cnt[par[lca]]--;
+    }
+    function<void(int,int)>dfs2=[&](int u,int p){
+        for(int v:tree[u]){
+            if(v==p)continue;
+            dfs2(v,u);
+            cnt[u]+=cnt[v];
+        }
+    };
+    dfs2(1,0);
+    for(int i=1;i<=n;i++){
+        cout<<cnt[i]<<" ";
+    }
+    cout<<"\n";
+
+}
+
+
+class FenwickTree{
+    int n;
+    vector<int>bits;
+    public:
+    FenwickTree(int n){
+        this->n=n;
+        bits.assign(n+1,0);
+    }
+    void update(int idx,int delta){
+        while(idx<=n){
+            bits[idx]+=delta;
+            idx+=idx & -idx;
+        }
+    }
+    int query(int idx){
+        int sum=0;
+        while(idx>0){
+            sum+=bits[idx];
+            idx-=idx & -idx;
+        }
+        return sum;
+    }
+    int range_query(int l,int r)
+    {
+        return query(r) - query(l-1);
+    }
+};
 
 
 
+void subtree_queries(){
+    int n,q;
+    cin>>n>>q;
+    vector<int>val(n+1);
+    vector<vector<int>>tree(n+1);
+    for(int i=1;i<=n;i++){
+        cin>>val[i];
+    }
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+    vector<int>arr(n+1),tin(n+1),tout(n+1);
+    int timer=0;
+    function<void(int,int)>dfs=[&](int u,int p){
+        tin[u]=++timer;
+        arr[timer]=val[u];
+        for(int v:tree[u]){
+            if(v==p)continue;
+            dfs(v,u);
+        }
+        tout[u]=timer;
+    };
+    dfs(1,0);
+    FenwickTree fw(n);
+    for(int i = 1; i <= n; i++) {
+        fw.update(i, arr[i]);
+    }
+    while(q--){
+        int type,s;
+        cin>>type>>s;
+        if(type==1){
+            int x;
+            cin>>x;
+            int delta=x-val[s];
+            val[s]=x;
+            fw.update(tin[s],delta);
+        }else{
+            cout<<fw.range_query(tin[s],tout[s])<<"\n";
+        }
+    }
 }
 
 
@@ -348,7 +583,10 @@ int32_t main() {
         // tree_dist_one();
         // tree_dist_two();
         // comapany_query_one();
-        company_query_two();
+        // company_query_two();
+        // distance_queries();
+        // counting_path();
+        subtree_queries();
     }
 
     return 0;
