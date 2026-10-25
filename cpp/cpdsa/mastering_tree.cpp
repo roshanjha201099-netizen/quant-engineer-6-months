@@ -568,6 +568,255 @@ void subtree_queries(){
     }
 }
 
+void path_query(){
+    int n,m;
+    cin>>n>>m;
+    vector<int>val(n+1);
+    for(int i=1;i<=n;i++){
+        cin>>val[i];
+    }
+    vector<vector<int>>tree(n+1);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+    vector<int>arr(n+1),tin(n+1),tout(n+1);
+    int timer=0;
+    function<void(int,int)>dfs=[&](int u,int p){
+        tin[u]=++timer;
+        arr[timer]=val[u];
+        for(int v:tree[u]){
+            if(p==v)continue;
+            dfs(v,u);
+        }
+        tout[u]=timer;
+    };
+    dfs(1,0);
+    FenwickTree fw(n);
+    for(int u=1;u<=n;u++)
+    {
+
+        fw.update(tin[u],val[u]);
+        fw.update(tout[u]+1,-val[u]);
+
+    }
+    while(m--){
+        int type,no;
+        cin>>type>>no;
+        if(type==1){
+            int nv;
+            cin>>nv;
+            int delta=nv-val[no];
+            val[no]=nv;
+            fw.update(tin[no],delta);
+            fw.update(tout[no]+1,-delta);
+        }else{
+            cout<<fw.query(tin[no])<<"\n";
+        }
+    }
+
+}
+
+
+class DSU{
+    vector<int>par,sz,dist_col;
+    int max_size;
+    set<int>comp;
+    public:
+    DSU(int n){
+        max_size=1;
+        par.resize(n+1);
+        sz.resize(n+1);
+        dist_col.resize(n+1);
+        for(int i=1;i<=n;i++){
+            par[i]=i;
+            dist_col[i]=1;
+            comp.insert(i);
+            sz[i]=1;
+        }
+    }
+    int find(int x){
+        if(par[x]==x)return x;
+        return par[x]=find(par[x]);
+    }
+    bool unite(int x,int y){
+        x=find(x);
+        y=find(y);
+        if(x==y)return false;
+        if(sz[x]<sz[y])swap(x,y);
+        par[y]=x;
+        comp.erase(y);
+        sz[x]+=sz[y];
+        max_size=max(max_size,sz[x]);
+        return true;
+    }
+    bool connected(int x,int y){
+        return find(x)==find(y);
+    }
+    int size(int x){
+        return sz[find(x)];
+    }
+    int max_size_comp(){
+        return max_size;
+    }
+    int num_components(){
+        return comp.size();
+    }
+};
+
+void distinct_color(){
+    int n;
+    cin>>n;
+    vector<int>node_color(n+1);
+    for(int i=1;i<=n;i++){
+        cin>>node_color[i];
+    }
+    vector<vector<int>>tree(n+1);
+    for(int i=0;i<n-1;i++)
+    {
+        int u,v;
+        cin>>u>>v;
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+    vector<set<int>>st(n+1);
+    vector<int>ans(n+1);
+    function<void(int,int)>dfs=[&](int u,int p){
+        st[u].insert(node_color[u]);
+        for(auto v:tree[u]){
+            if(v==p)continue;
+            dfs(v,u);
+            if (st[u].size() < st[v].size()) {
+                swap(st[u], st[v]);
+            }
+            for (int c : st[v]) {
+                st[u].insert(c);
+            }
+        }
+        ans[u]=st[u].size();
+    };
+    dfs(1, 0);  // Missing DFS call
+
+    for (int i = 1; i <= n; i++) {
+        cout << ans[i] << " ";
+    }
+    cout << "\n";
+   
+
+}
+
+void tree_painting(){
+    int n;
+    cin>>n;
+    vector<vector<int>>tree(n+1);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+    vector<int>subtree(n+1);
+    function<int(int,int)>dfs=[&](int u,int p){
+        int sz=1;
+        for(int v:tree[u]){
+            if(v==p)continue;
+            sz+=dfs(v,u);
+        }
+        subtree[u]=sz;
+        return sz;
+    };
+    dfs(1,0);
+    for(int i=1;i<=n;i++){
+        cout<<subtree[i]<<" ";
+    }
+}
+
+void party() {
+    int n;
+    cin >> n;
+
+    vector<vector<int>> tree(n + 1);
+    vector<int> roots;
+
+    for (int i = 1; i <= n; i++) {
+        int e;
+        cin >> e;
+
+        if (e == -1) {
+            roots.push_back(i);
+        } else {
+            tree[e].push_back(i);
+        }
+    }
+
+    int maxi = 0;
+
+    function<void(int, int)> dfs = [&](int u, int d) {
+        maxi = max(maxi, d);
+
+        for (auto v : tree[u]) {
+            dfs(v, d + 1);
+        }
+    };
+
+    for (auto e : roots) {
+        dfs(e, 1);
+    }
+
+    cout << maxi << "\n";
+}
+
+void expected_length_journey() {
+    int n;
+    cin >> n;
+
+    vector<vector<int>> tree(n + 1);
+
+    for (int i = 0; i < n - 1; i++) {
+        int u, v;
+        cin >> u >> v;
+
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+
+    double ans = 0.0;
+
+    function<void(int, int, double, int)> dfs =
+    [&](int u, int p, double pb, int dep) {
+        int size = tree[u].size();
+
+        // Root itself is a leaf if n == 1.
+        if (n == 1) {
+            return;
+        }
+
+        // Non-root leaf: only neighbour is its parent.
+        if (u != 1 && size == 1) {
+            ans += dep * pb;
+            return;
+        }
+
+        // Number of children, excluding parent.
+        int children = (u == 1 ? size : size - 1);
+
+        double npb = 1.0 / children;
+
+        for (int v : tree[u]) {
+            if (v == p) continue;
+
+            dfs(v, u, pb * npb, dep + 1);
+        }
+    };
+
+    dfs(1, 0, 1.0, 0);
+
+    cout << fixed << setprecision(10) << ans << '\n';
+}
+
+
 
 int32_t main() {
     ios::sync_with_stdio(0);
@@ -586,7 +835,12 @@ int32_t main() {
         // company_query_two();
         // distance_queries();
         // counting_path();
-        subtree_queries();
+        // subtree_queries();
+        // path_query();
+        //  distinct_color();
+        // tree_painting();
+        // party();
+        expected_length_journey();
     }
 
     return 0;

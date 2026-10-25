@@ -48,6 +48,30 @@ class DSU{
 };
 
 
+
+// void ice_skating(){
+//     int n;
+//     cin>>n;
+//     vector<pair<int,int>>cord;
+//     for(int i=0;i<n;i++){
+//         int x,y;
+//         cin>>x>>y;
+//         cord.push_back({x,y});
+//     }
+//     DSU dsu(n);
+//     int cnt=0;
+//     for(int i=0;i<n;i++){
+//         for(int j=i+1;j<n;j++){
+//             if(cord[i].first==cord[j].first || cord[i].second==cord[j].second){
+//                 dsu.unite(i+1,j+1);
+//             }
+//         }
+//     }
+//     cout<<dsu.num_components()-1<<"\n";
+
+// }
+
+
 void roadDestruct(){
     int n,m,q;
     cin>>n>>m>>q;
@@ -154,6 +178,39 @@ void news_dist() {
         cout << dsu.size(i) << " ";
     }
 }
+
+void road_repair(){
+    int n,m;
+    cin>>n>>m;
+    vector<vector<int>>edges;
+    for(int i=0;i<m;i++){
+        int u,v,w;
+        cin>>u>>v>>w;
+        edges.push_back({u,v,w});
+    }
+    sort(edges.begin(),edges.end(),[&](vector<int>&a,vector<int>&b){
+        return a[2]<b[2];
+    });
+    int cnt=0,sum=0;
+    DSU dsu(n);
+    for(auto it:edges){
+        int u=it[0];
+        int v=it[1];
+        int w=it[2];
+        if(dsu.unite(u,v)){
+            cnt++;
+            sum+=w;
+        }
+    }
+    if(cnt!=n-1){
+        cout<<"IMPOSSIBLE\n";
+    }else{
+        cout<<sum<<"\n";
+    }
+
+}
+
+
 void solve(){
     int n,m;
     cin>>n>>m;
@@ -170,6 +227,6 @@ void solve(){
 int32_t main(){
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    news_dist();
+    road_repair();
     return 0;
 }
