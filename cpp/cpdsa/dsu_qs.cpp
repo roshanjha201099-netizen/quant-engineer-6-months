@@ -222,6 +222,37 @@ void solve(){
         cout<<dsu.num_components()<<" "<<dsu.max_size_comp()<<"\n";
     }
 }
+void path_queries(){
+    int n,m;
+    cin>>n>>m;
+    vector<vector<int>>tree;
+    for(int i=0;i<n-1;i++){
+        int u,v,w;
+        cin<<u<<v<<w;
+        tree.push_back({u,v,w});
+    }
+    sort(tree.begin(),tree.end(),[&](vector<int>&a,vector<int>&b){
+        return a[2]<b[2];
+    });
+    vector<pair<int,int>>queries;
+    for(int i=0;i<m;i++){
+        int wt;
+        cin>>wt;
+        queries.push_back({wt,i});
+    }
+    sort(queries.begin(),queries.end(),[&](pair<int,int>&a,pair<int,int>&b){
+        return a.first<b.first;
+    });
+    vector<int>ans(m);
+
+
+
+    for(int i=0;i<m;i++){
+        cout<<ans[i]<<"\n";
+    }
+
+
+}
 
 
 int32_t main(){
